@@ -1,0 +1,124 @@
+import cv2
+import numpy as np
+
+print("Librerias instaladas")
+
+img = cv2.imread('girasol.jpg') #Comando para leer la imagen
+img = cv2.resize(img, (400,350))
+
+# B G R      no RGB
+
+#Imagen en Canny
+imgCanny = cv2.Canny(img, 1100, 1100) #Entre mas bajo mas lineas
+
+img2Canny = cv2.Canny(img, 500, 500) #Entre mas bajo mas lineas
+
+
+cv2.imshow('Imagen Original',img)
+cv2.waitKey(0)
+cv2.imshow('Imagen con Canny',img2Canny)
+cv2.waitKey(0)
+cv2.imshow('Imagen transformada a negro',imgCanny)
+cv2.waitKey(0)
+
+
+
+
+#-------------------------------------------------------------
+#Para el texto
+
+#Leer imagen
+img4 = cv2.cvtColor(imgCanny,cv2.COLOR_GRAY2BGR)
+img11 = cv2.resize(img4, (700,550))
+
+font_name=['HERSHEY SIMPLEX',
+     'HERSHEY PLAIN',
+     'HERSHEY DUPLEX', 
+     'HERSHEY COMPLEX', 
+     'HERSHEY TRIPLEX', 
+     'HERSHEY COMPLEX SMALL', 
+     'HERSHEY SCRIPTSIMPLEX', 
+     'HERSHEY SCRIPTCOMPLEX',
+     'ITALIC' ]
+
+
+fonts=[cv2.FONT_HERSHEY_SIMPLEX,
+     cv2.FONT_HERSHEY_PLAIN,
+     cv2.FONT_HERSHEY_DUPLEX, 
+     cv2.FONT_HERSHEY_COMPLEX, 
+     cv2.FONT_HERSHEY_TRIPLEX, 
+     cv2.FONT_HERSHEY_COMPLEX_SMALL, 
+     cv2.FONT_HERSHEY_SCRIPT_SIMPLEX, 
+     cv2.FONT_HERSHEY_SCRIPT_COMPLEX,
+     cv2.FONT_ITALIC ]
+
+
+#Características del texto
+texto = "19110278"
+ubicacion = (50,100)
+tamañoLetra = 1
+colorLetra = (0,255,255)
+grosorLetra = 2
+
+
+for i in range(len(fonts)):
+    #Escribir texto
+    cv2.putText(img11, font_name[i], (20,60*(i+1)), fonts[i], tamañoLetra, colorLetra, grosorLetra)
+
+
+#Mostrar imagen
+cv2.imshow('imagen con texto',img11)
+cv2.waitKey(0)
+
+
+#Figuras en Imagenes
+
+img4 = cv2.cvtColor(imgCanny,cv2.COLOR_GRAY2BGR)
+
+cv2.line(img4,(0,0),(600,400),(255,0,0),4)
+cv2.line(img4,(400,0),(0,400),(0,255,0),4)
+cv2.line(img4,(300,0),(300,200),(100,100,255),10)
+cv2.rectangle(img4,(50,80),(200,200),(255,0,0),1)
+cv2.rectangle(img4,(200,80),(400,130),(0,150,150),1)
+cv2.circle(img4,(300,200),75,(255,255,0),-1)
+cv2.circle(img4,(300,20),10,(255,0,255),3)
+cv2.circle(img4,(75,250),50,(0,255,255),3)
+
+
+cv2.imshow('imagen con figuras',img4)
+cv2.waitKey(0)
+
+
+
+
+#---------------------------------------------------------
+#Punto de Interes
+
+roi = cv2.selectROI(img)
+#print rectangle points of selected roi
+print(roi)
+
+#Crop selected roi from raw image
+roi_cropped = img[int(roi[1]):int(roi[1]+roi[3]), int(roi[0]):int(roi[0]+roi[2])]
+
+#show cropped image
+cv2.imshow("ROI", roi_cropped)
+
+cv2.imwrite("crop.jpeg",roi_cropped)
+cv2.waitKey(0)
+
+
+cv2.destroyAllWindows()
+
+#Imagen en escala de grises
+imggris = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+#Suavizado de imagenes Difuminada
+imgblur = cv2.GaussianBlur(imggris, (5, 5),1)
+
+cv2.imshow('Imagen gris',imggris)
+cv2.waitKey(0)
+cv2.imshow('Imagen Blur',imgblur)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
